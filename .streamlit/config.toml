@@ -1,0 +1,6 @@
+[server]
+port = 8501
+
+[theme]
+secondaryBackgroundColor = "#f6f6f6"
+linkColor = "#e30289"

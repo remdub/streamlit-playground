@@ -1,0 +1,19 @@
+[project]
+name = "streamlit-playground"
+version = "1.0.0"
+description = "A playground to test Streamlit developments."
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "requests",
+    "streamlit",
+]
+
+[dependency-groups]
+dev = [
+    "watchdog>=6.0.0",
+]
+test = [
+    "pytest",
+]

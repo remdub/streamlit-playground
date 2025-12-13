@@ -1,0 +1,31 @@
+name: Build image
+
+on: workflow_dispatch
+
+env:
+  IMAGE_NAME: ${{ github.repository }}
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Upgrade system and install Buildah
+        run: |-
+          sudo apt-get update
+          sudo apt-get install -y buildah
+      - name: Build Image
+        run: |-
+          buildah build -t $REGISTRY/${IMAGE_NAME} -f ./oci/Containerfile .
+      - name: Log in to GitHub Container Registry
+        run: |-
+          buildah login $REGISTRY -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+      - name: Push Image to GitHub Container Registry
+        run: |-
+          buildah push $REGISTRY/${IMAGE_NAME}:latest
+          buildah push $REGISTRY/${IMAGE_NAME}:${{ github.ref_name }}
