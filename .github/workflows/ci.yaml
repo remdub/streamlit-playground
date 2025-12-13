@@ -13,6 +13,10 @@ jobs:
       packages: write
       contents: read
     steps:
+      - name: Build tags
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Upgrade system and install Buildah
@@ -21,11 +25,11 @@ jobs:
           sudo apt-get install -y buildah
       - name: Build Image
         run: |-
-          buildah build -t $REGISTRY/${IMAGE_NAME} -f Dockerfile .
+          buildah build -t $REGISTRY/${IMAGE_NAME}:latest -t $REGISTRY/${IMAGE_NAME}:${{ env.SHORT_SHA }}  -f Dockerfile .
       - name: Log in to GitHub Container Registry
         run: |-
           buildah login $REGISTRY -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
       - name: Push Image to GitHub Container Registry
         run: |-
           buildah push $REGISTRY/${IMAGE_NAME}:latest
-          buildah push $REGISTRY/${IMAGE_NAME}:${GITHUB_SHA}
+          buildah push $REGISTRY/${IMAGE_NAME}:${{ env.SHORT_SHA }}
