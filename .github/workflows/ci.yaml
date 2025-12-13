@@ -21,7 +21,7 @@ jobs:
           sudo apt-get install -y buildah
       - name: Build Image
         run: |-
-          buildah build -t $REGISTRY/${IMAGE_NAME} -f ./oci/Containerfile .
+          buildah build -t $REGISTRY/${IMAGE_NAME} -f Dockerfile .
       - name: Log in to GitHub Container Registry
         run: |-
           buildah login $REGISTRY -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
