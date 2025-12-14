@@ -18,3 +18,8 @@ clean:
 start-docker:
 	docker build -t streamlit-playground .
 	docker run -p 8501:8501 streamlit-playground
+
+.PHONY: buildah  # Buil image using buildah and start application in Docker
+buildah:
+	buildah build -t streamlit-playground:dev .
+	docker run -p 8501:8501 localhost/streamlit-playground:dev
