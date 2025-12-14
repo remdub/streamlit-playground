@@ -11,6 +11,7 @@ st.set_page_config(page_title="GitOps Portal", page_icon="☸️", layout="wide"
 try:
     PROVIDER = st.secrets["provider"]
     HARBOR = st.secrets["harbor"]
+    BASE_PATH = st.secrets["base_path"]
 except FileNotFoundError:
     st.error("❌ `.streamlit/secrets.toml` not found!")
     st.stop()
@@ -118,7 +119,7 @@ def create_pr_github_atomic(token, repo_name, base_branch, app_name, file_dict, 
     # 2. Prepare files for Atomic Commit
     elements = []
     for filename, content in file_dict.items():
-        path = f"apps/{app_name}/{filename}"
+        path = f"{BASE_PATH}/{app_name}/{filename}"
         blob = repo.create_git_blob(content, "utf-8")
         elements.append(InputGitTreeElement(path=path, mode="100644", type="blob", sha=blob.sha))
 
